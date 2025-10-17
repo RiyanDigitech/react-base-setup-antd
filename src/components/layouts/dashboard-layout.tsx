@@ -25,9 +25,17 @@ const DashboardLayout = () => {
   const {
     token: { colorPrimary },
   } = theme.useToken();
+const logout = () => {
+    // Step 1: TokenService se sab cookies aur local storage clear karein
+    tokenService.clearStorage();
 
+    // Step 2: User ko login page par redirect kar dein
+    // `replace: true` se browser history mein pichla page save nahi hoga
+    navigate("/auth/login", { replace: true });
+  };
   useEffect(() => {
     const token = tokenService?.getLocalAccessToken();
+    console.log("token in layout", token);
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
@@ -35,13 +43,13 @@ const DashboardLayout = () => {
         console.log(decodedToken?.exp, "current time", currentTime);
         if (decodedToken?.exp && decodedToken?.exp < currentTime) {
           tokenService?.clearStorage();
-          navigate("/login");
+          navigate("/auth/login");
         }
       } catch (error) {
-        navigate("/login");
+        navigate("/auth/login");
       }
     } else {
-      navigate("/login");
+      navigate("/auth/login");
     }
     const pathSegments = pathname.split("/").filter(Boolean);
     if (pathSegments.length > 0) {
@@ -106,25 +114,25 @@ const DashboardLayout = () => {
       disabled: true,
     },
 
-    {
-      key: "3",
-      label: (
-        <div className="">
-          <button
-            // onClick={ChangePassword}
-            className="mx-auto flex justify-center font-manrope text-xs  font-semibold"
-          >
-            Change Password
-          </button>
-        </div>
-      ),
-    },
+    // {
+    //   key: "3",
+    //   label: (
+    //     <div className="">
+    //       <button
+    //         // onClick={ChangePassword}
+    //         className="mx-auto flex justify-center font-manrope text-xs  font-semibold"
+    //       >
+    //         Change Password
+    //       </button>
+    //     </div>
+    //   ),
+    // },
     {
       key: "2",
       label: (
         <div className="">
           <button
-            // onClick={logout}
+            onClick={logout}
             className="mx-auto flex justify-center font-manrope text-xs  font-semibold"
           >
             LogOut
@@ -151,7 +159,7 @@ const DashboardLayout = () => {
 
             position: "fixed",
             left: 0,
-            background: colorPrimary,
+            background: "#E7E6E8",
             zIndex: 1000,
           }}
           collapsible
@@ -200,7 +208,7 @@ const DashboardLayout = () => {
                         }`}
                       />
                     ),
-                    label: <div className="text-[#0F172A]">Dashboard</div>,
+                    label: <div className="text-textcolor">Dashboard</div>,
                   },
                   {
                     key: "/franchise-list",
@@ -212,7 +220,7 @@ const DashboardLayout = () => {
                       />
                     ),
                     label: (
-                      <div className=" text-[#0F172A]">
+                      <div className=" text-textcolor">
                         Franchise Management
                       </div>
                     ),
@@ -227,7 +235,7 @@ const DashboardLayout = () => {
                   //     />
                   //   ),
                   //   label: (
-                  //     <div className=" text-[#0F172A]">Customer Management</div>
+                  //     <div className=" text-textcolor">Customer Management</div>
                   //   ),
                   // },
                   // {
@@ -240,7 +248,7 @@ const DashboardLayout = () => {
                   //     />
                   //   ),
                   //   label: (
-                  //     <div className="text-[#0F172A]">Complaint Management</div>
+                  //     <div className="text-textcolor">Complaint Management</div>
                   //   ),
                   // },
                   // {
@@ -253,7 +261,7 @@ const DashboardLayout = () => {
                   //     />
                   //   ),
                   //   label: (
-                  //     <div className="text-[#0F172A]">Service Management</div>
+                  //     <div className="text-textcolor">Service Management</div>
                   //   ),
                   // },
                   // {
@@ -266,7 +274,7 @@ const DashboardLayout = () => {
                   //     />
                   //   ),
                   //   label: (
-                  //     <div className="text-[#0F172A]">Lead Management</div>
+                  //     <div className="text-textcolor">Lead Management</div>
                   //   ),
                   // },
 
@@ -295,7 +303,7 @@ const DashboardLayout = () => {
                 onClick={({ key }) => navigate(key)}
                 items={[
                   {
-                    key: "/",
+                    key: "/dashboard",
                     icon: (
                       <MdDashboard
                         className={` ${
@@ -303,11 +311,11 @@ const DashboardLayout = () => {
                         }`}
                       />
                     ),
-                    label: <div className="text-[#0F172A]">Dashboard</div>,
+                    label: <div className="text-textcolor">Dashboard</div>,
                   },
 
                   {
-                    key: "/lead",
+                    key: "/pokemons",
                     icon: (
                       <MdReceipt
                         className={`${
@@ -316,7 +324,20 @@ const DashboardLayout = () => {
                       />
                     ),
                     label: (
-                      <div className="text-[#0F172A]">Lead Management</div>
+                      <div className="text-textcolor">Pokemons</div>
+                    ),
+                  },
+                   {
+                    key: "/teams",
+                    icon: (
+                      <MdReceipt
+                        className={`${
+                          collapsed || !see ? "ml-1 h-[20px] w-[20px] mr-5" : ""
+                        }`}
+                      />
+                    ),
+                    label: (
+                      <div className="text-textcolor">Teams</div>
                     ),
                   },
                   // {
@@ -329,7 +350,7 @@ const DashboardLayout = () => {
                   //     />
                   //   ),
                   //   label: (
-                  //     <div className="text-[#0F172A]">Complaint Management</div>
+                  //     <div className="text-textcolor">Complaint Management</div>
                   //   ),
                   // },
                   // {
@@ -351,7 +372,7 @@ const DashboardLayout = () => {
         {getSiderWidth() > 70 && currentPage === "Account Details" && (
           <>
             <div className="z-99999 ml-[239px] ">
-              <div className="text-[#0F172A] font-bold py-5 ml-4  text-2xl">
+              <div className="text-textcolor font-bold py-5 ml-4  text-2xl">
                 Setting
               </div>{" "}
               <div className="border-b-[1px] w-10/12 mx-auto ">
@@ -426,6 +447,7 @@ const DashboardLayout = () => {
             style={{
               paddingLeft: 6,
               paddingRight: 12,
+              border:6
             }}
           >
             <button
@@ -435,7 +457,7 @@ const DashboardLayout = () => {
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </button>
             <div className=" w-full flex justify-end items-center sm:justify-between">
-              <div className="font-DMSans text-[#0F172A] font-bold text-lg max-sm:hidden">
+              <div className="font-DMSans text-textcolor font-bold text-lg max-sm:hidden">
                 {currentPage === "Lead" ? "Lead List" : currentPage}
               </div>
               <div className=" w-8/12 sm:w-3/12 lg:w-80 flex items-center justify-between">

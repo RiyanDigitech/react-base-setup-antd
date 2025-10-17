@@ -1,39 +1,44 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import tokenService from "@/services/token.service";
-interface ProtectedRouteProps {
-  roleAllowed: string[]; // Array of allowed roles
-}
 
+// Yeh woh routes hain jahan user login kiye baghair ja sakta hai
 const AUTH_ROUTES = [
-  "/admin/login",
+  "/auth/login",
   "/admin/forgot-password",
-  "/admin/reset-password/:token",
+  "/admin/reset-password/:token", // Dynamic route
 ];
-const isRouteMatch = (pathname: string) => {
+
+// Function to check if the current URL is an auth route
+const isAuthRoute = (pathname: string) => {
   return AUTH_ROUTES.some((route) => {
     if (route.includes(":")) {
-      // Handle dynamic routes like "/admin/reset-password/:id"
-      const baseRoute = route.split(":")[0]; // Extract base route "/admin/reset-password/"
+      // Dynamic routes handle karne ke liye (e.g., /reset-password/xyz)
+      const baseRoute = route.split(":")[0];
       return pathname.startsWith(baseRoute);
     }
-    return route === pathname; // Match static routes
+    // Static routes ke liye direct match
+    return route === pathname;
   });
 };
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ roleAllowed }) => {
-  const userRole = tokenService?.getUserRoleFromCookie();
+
+const ProtectedRoute = () => {
   const { pathname } = useLocation();
   const accessToken = tokenService.getLocalAccessToken();
 
-  if (!accessToken && !isRouteMatch(pathname)) {
-    return <Navigate to="/admin/login" />;
+  // 1️⃣: Agar token NAHI hai aur user protected page par jana chah raha hai
+  if (!accessToken && !isAuthRoute(pathname)) {
+    // To usko login page par bhej do
+    return <Navigate to="/auth/login" replace />;
   }
 
-  if (accessToken && isRouteMatch(pathname)) {
-    return <Navigate to="/" />;
+  // 2️⃣: Agar token HAI aur user login ya forgot password page par ja raha hai
+  if (accessToken && isAuthRoute(pathname)) {
+    // To usko dashboard par bhej do kyunke woh pehle se logged in hai
+    return <Navigate to="/dashboard" replace />;
   }
-  if (accessToken && (!userRole || !roleAllowed.includes(userRole))) {
-    return <Navigate to="/" />;
-  }
+
+  // Agar upar wali koi condition nahi hai, to user ko uski manzil par jane do
+  // <Outlet /> ka matlab hai ke jo bhi child route match ho raha hai, usay render kar do
   return <Outlet />;
 };
 

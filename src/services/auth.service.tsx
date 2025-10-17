@@ -18,32 +18,30 @@ const AuthService = () => {
   const queryClient = useQueryClient();
   const useHandleLoginInService = (reset: () => void) => {
     function handleLogInRequest(data: userType): Promise<LoginApiResponse> {
-      return axios.post(`/admin/login`, data);
+      return axios.post(`api/auth/login`, data);
     }
     const onSuccess = (response: LoginApiResponse) => {
+      console.log("console checking.... after login", response);
+
       const userObject = {
-        id: response?.data?.data?.id,
-        username: response?.data?.data?.name,
-        email: response?.data?.data?.email,
-        phone: response?.data?.data?.phone,
-        address: response?.data?.data?.address || "",
+        id: response?.data?.details?.id,
+        username: response?.data?.details?.name,
+        email: response?.data?.details?.email,
+        phone: response?.data?.details?.phone,
       };
-      if (
-        response?.data?.data?.role === "Admin" ||
-        response?.data?.data?.role === "Franchise"
-      ) {
+      
         tokenService?.setLastUserData(userObject);
-        tokenService.setUser(response?.data?.data?.name);
+        tokenService.setUser(response?.data?.details);
         tokenService.setTokenRetries(5);
         tokenService.saveLocalRefreshToken("");
-        tokenService.saveLocalAccessToken(response?.data?.data?.accessToken);
-      }
+        tokenService.saveLocalAccessToken(response?.data?.token);
+      
       notification.success({
         message: "Login Successful",
         description: "You have successfully logged in!",
         placement: "topRight",
       });
-      navigate("/");
+      navigate("/dashboard");
       queryClient.invalidateQueries({ queryKey: ["user"] });
       reset();
     };
@@ -114,7 +112,7 @@ const AuthService = () => {
       });
       tokenService.clearStorage();
 
-      navigate("/admin/login");
+      navigate("/auth/login");
       queryClient.invalidateQueries({ queryKey: ["user"] });
       reset();
     };
@@ -149,7 +147,7 @@ const AuthService = () => {
         placement: "topRight",
       });
 
-      navigate("/admin/login");
+      navigate("/auth/login");
       queryClient.invalidateQueries({ queryKey: ["user", safeToken] });
       reset();
     };

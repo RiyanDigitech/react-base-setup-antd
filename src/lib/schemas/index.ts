@@ -52,11 +52,18 @@ const schemaCreateService = z.object({
   //   .optional()
   //   .refine((file) => file?.type.startsWith("image/"), "File must be an image"),
 });
-
+ const teamSchema = z.object({
+    name: z.string().min(3, { message: 'Team name must be at least 3 characters long.' }),
+    pokemons: z
+        .array(z.string())
+        .min(1, { message: 'Please select at least one Pokémon.' })
+        .max(6, { message: 'You can select a maximum of 6 Pokémon.' }),
+});
 export {
   schema,
   schemaForgotPassword,
   ChangePasswordSchema,
   schemaFranchise,
   schemaCreateService,
+  teamSchema
 };

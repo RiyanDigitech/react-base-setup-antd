@@ -65,7 +65,6 @@ export default function LoginPage() {
   const isButtonDisabled = !email || !password || isPending;
   const handleCaptchaChange = (token: string | null) => {
     setCaptchaToken(token);
-    console.log("Captcha token:", token);
   };
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     if (!captchaToken) {
@@ -77,7 +76,7 @@ export default function LoginPage() {
     }
     const payload = {
       ...data,
-      rememberMe: isRememberMeChecked,
+      // rememberMe: isRememberMeChecked,
     };
 
     console.log("Submitting data:", payload);
@@ -158,17 +157,17 @@ export default function LoginPage() {
           />
           <div className="w-full   flex justify-between mt-[-2px] items-center">
             <div className="flex items-center">
-              <div>
+              {/* <div>
                 <Checkbox onChange={handleCheckboxChange} />
-              </div>
-              <div className="ml-2 font-DMSans text-sm text-[#525B75]">
+              </div> */}
+              {/* <div className="ml-2 font-DMSans text-sm text-[#525B75]">
                 {" "}
                 Remember me
-              </div>
+              </div> */}
             </div>
-            <p className="text-[12px] text-[#008444] font-DMSans">
+            {/* <p className="text-[12px] text-[#008444] font-DMSans">
               <Link to={"/admin/forgot-password"}>Forgot Password?</Link>
-            </p>
+            </p> */}
           </div>
           <div className="my-5 md:w-[120px]">
             {" "}

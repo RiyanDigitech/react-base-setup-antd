@@ -1,15 +1,54 @@
-import LeadService from "@/services/lead-management/lead-service";
-import LeadChart from "@/components/modules/dashboard/dashboard-chart";
+import React, { FC } from 'react';
+import { useFetchAllDashboard } from '@/services/dashoboard-stats/dashboard-stats'; // Sahi path dein
+import TeamPokemonChart from '@/components/modules/dashboard/TeamPokemon'; // Chart component import karein
 
-const DashboardPage = () => {
-  const { useFetchAllLeadCounts } = LeadService();
-  const { data: leadCounts } = useFetchAllLeadCounts();
-  console.log("leadCounts", leadCounts?.data);
+// API se anay walay data ke structure ke liye types (yeh waise hi rahenge)
+interface Team {
+  id: string;
+  name: string;
+  pokemons: string[];
+}
+
+interface ApiResponse {
+  teams: Team[];
+}
+
+const DashboardPage: FC = () => {
+  // 1. Hook ko bina <ApiResponse> ke call karein
+  const { data, isLoading, isError, error } = useFetchAllDashboard();
+
+  if (isLoading) {
+    return <div className='p-5'>Loading dashboard data...</div>;
+  }
+
+  if (isError) {
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return <div className='p-5'>Error fetching data: {errorMessage}</div>;
+  }
+
+  // 2. Data ko explicitly type karein (Type Assertion)
+  // Is se TypeScript ko pata chal jata hai ke 'data' ka structure 'ApiResponse' jaisa hai.
+  // Yeh 'Property 'teams' does not exist' wali error ko theek karta hai.
+  const typedData = data as ApiResponse;
+
+  // 3. Ab 'typedData' istemal karein, TypeScript ko ab 'team' ki type pata hai
+  // Is se 'implicitly has an 'any' type' wali error theek ho jayegi.
+  const chartData = typedData?.teams?.map((team) => ({
+    name: team.name,
+    pokemonCount: team.pokemons.length,
+  })) || [];
+
+
   return (
-    <div className="p-1">
-      <div className="min-h-screen bg-gradient-to-br from-[#e2e8f0] to-[#e2e8f0] flex justify-center items-center">
-        <LeadChart />
-      </div>
+    <div className='p-5'>
+      <h1>Dashboard</h1>
+      <h3 className='mt-4 mb-2'>Team-wise Pokémon Count</h3>
+      
+      {chartData.length > 0 ? (
+        <TeamPokemonChart data={chartData} />
+      ) : (
+        <p>No team data available to display.</p>
+      )}
     </div>
   );
 };
