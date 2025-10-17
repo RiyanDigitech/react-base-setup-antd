@@ -1,4 +1,6 @@
 import { Inputs } from "@/lib/types";
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+
 import {
   Checkbox,
   Form,
@@ -67,13 +69,13 @@ export default function LoginPage() {
     setCaptchaToken(token);
   };
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    if (!captchaToken) {
-      notification.error({
-        message: "CAPTCHA Required",
-        description: "Please complete the CAPTCHA to proceed.",
-      });
-      return;
-    }
+    // if (!captchaToken) {
+    //   notification.error({
+    //     message: "CAPTCHA Required",
+    //     description: "Please complete the CAPTCHA to proceed.",
+    //   });
+    //   return;
+    // }
     const payload = {
       ...data,
       // rememberMe: isRememberMeChecked,
@@ -82,6 +84,7 @@ export default function LoginPage() {
     console.log("Submitting data:", payload);
     mutate(payload);
   };
+    const navigate = useNavigate();
 
   return (
     <div className="h-screen  md:w-[100vw]  bg-[url('/auth-bg.png')] bg-cover bg-center  relative flex md:items-center justify-center font-manrope">
@@ -169,17 +172,21 @@ export default function LoginPage() {
               <Link to={"/admin/forgot-password"}>Forgot Password?</Link>
             </p> */}
           </div>
-          <div className="my-5 md:w-[120px]">
+          {/* <div className="my-5 md:w-[120px]">
             {" "}
             <ReCAPTCHA
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               onChange={handleCaptchaChange}
             />
-          </div>
+          </div> */}
+           <div className=''>
+                    <Link onClick={() => navigate('/auth/signup')}>signup  here</Link>
+
+                </div>
           <button
             disabled={isButtonDisabled} // Button disabled logic
             type="submit"
-            className={`w-11/12 sm:w-6/12 lg:w-full  mx-auto text-white py-2 rounded-md text-[14px] font-semibold ${
+            className={`w-11/12 sm:w-6/12 lg:w-full mt-4  mx-auto text-white py-2 rounded-md text-[14px] font-semibold ${
               !isButtonDisabled ? "bg-[#ff6820]" : "bg-[#f0763e]"
             }`}
           >

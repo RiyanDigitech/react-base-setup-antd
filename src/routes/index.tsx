@@ -12,6 +12,7 @@ import DashboardPage from "@/pages/dashboard";
 import ChangePassword from "@/pages/auth/change-password";
 import Pokemons from "@/pages/pokemons/pokemons";
 import Teams from "@/pages/Teams/Teams";
+import SignUpPage from "@/pages/auth/signup";
 // import FranchiseDashboardPage from "@/pages/dashboard/dashboard"; // This seems like a duplicate of DashboardPage
 
 const router = createBrowserRouter([
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
     path: "/admin/reset-password/:token",
     element: <ResetNewPassword />,
   },
+{path: "/auth/signup", element: <SignUpPage />},
 
   // Optional: 404 Not Found Page ke liye
   // {
