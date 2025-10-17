@@ -71,3 +71,11 @@ export type ApiResponse<T> = {
   data: T;
 };
 export type ChangePasswordType = z.infer<typeof ChangePasswordSchema>;
+
+
+export interface SignupInputs {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+}

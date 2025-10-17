@@ -110,7 +110,7 @@ export default function LoginPage() {
                   htmlFor="email"
                   className="text-[14px] max-md:block text-[#6B6B6B] font-manrope font-semibold leading-[1.125rem]"
                 >
-                  USER ID
+                  Email
                 </label>
                 <Input
                   {...field}
@@ -179,9 +179,9 @@ export default function LoginPage() {
               onChange={handleCaptchaChange}
             />
           </div> */}
-           <div className='text-blue-500' >
+           <div className='text-blue-500 underline font-bold' >
                     <Link onClick={() => navigate('/auth/signup')} 
-                    >Signup  here</Link>
+                    >Signup Here</Link>
 
                 </div>
           <button

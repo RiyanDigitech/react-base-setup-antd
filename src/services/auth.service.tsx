@@ -217,6 +217,42 @@ const AuthService = () => {
       refetchOnWindowFocus: false,
     });
   };
+
+// Add this inside AuthService()
+const useHandleSignUpInService = (reset: () => void) => {
+  function handleSignUpRequest(data: userType): Promise<LoginApiResponse> {
+    return axios.post(`api/auth/signup`, data);
+  }
+
+  const onSuccess = (response: LoginApiResponse) => {
+    notification.success({
+      message: "Signup Successful",
+      description: "Account created successfully!",
+      placement: "topRight",
+    });
+
+    navigate("/auth/login"); // after signup go to login page
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+    reset();
+  };
+
+  const onError = (error: errorType) => {
+    notification.error({
+      message: "Signup Failed",
+      description: error?.response?.data?.message || "Signup Failed",
+      placement: "topRight",
+    });
+  };
+
+  return useMutation({
+    mutationFn: handleSignUpRequest,
+    onSuccess,
+    onError,
+    retry: 0,
+  });
+};
+
+
   return {
     useHandleLoginInService,
     useHandleForGotPassword,
@@ -224,6 +260,7 @@ const AuthService = () => {
     useHandleUpdateProfile,
     useHandleResetPassword,
     useFetchTargetedAdmin,
+    useHandleSignUpInService,
   };
 };
 
