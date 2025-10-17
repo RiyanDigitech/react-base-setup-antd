@@ -179,8 +179,9 @@ export default function LoginPage() {
               onChange={handleCaptchaChange}
             />
           </div> */}
-           <div className=''>
-                    <Link onClick={() => navigate('/auth/signup')}>signup  here</Link>
+           <div className='text-blue-500' >
+                    <Link onClick={() => navigate('/auth/signup')} 
+                    >Signup  here</Link>
 
                 </div>
           <button
