@@ -41,13 +41,13 @@ const DashboardPage: FC = () => {
 
   return (
     <div className='p-5'>
-      <h1>Dashboard</h1>
-      <h3 className='mt-4 mb-2'>Team-wise Pokémon Count</h3>
+      <h3 className='mt-4 mb-2 flex justify-center items-center text-lg'>Team-wise Pokémon Count</h3>
       
       {chartData.length > 0 ? (
         <TeamPokemonChart data={chartData} />
       ) : (
-        <p>No team data available to display.</p>
+        <p className=' flex justify-center items-center
+        text-lg'>No team data available to display.</p>
       )}
     </div>
   );

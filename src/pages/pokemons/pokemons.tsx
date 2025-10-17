@@ -113,6 +113,7 @@ function Pokemons() {
           onChange={handleTableChange}
           bordered
           rowKey="key"
+          loading={isLoading}
         />
       </Spin>
     </div>
